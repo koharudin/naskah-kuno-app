@@ -21,7 +21,7 @@ services:
   fe:
     build:
       context: .
-      dockerfile: fe.Dockerfile
+      dockerfile: fe/full-version/fe.Dockerfile
     volumes:
       - ./fe/full-version:/app
     ports:
