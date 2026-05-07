@@ -5,22 +5,29 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return response()->json(["message"=>"backend web"]);
+    return response()->json(["message" => "backend web"]);
+});
+
+Route::group(["middleware" => ["auth:api"]], function () {
+    Route::get("/me", function () {
+        $user = auth()->user();
+        return response()->json(["data"=>$user]);
+    });
 });
 
 Route::get('/login', function () {
     $user = request()->input("username");
     $password  = request()->input("password");
 
-    $user = User::where("email",$user)->get()->first();
-    if($user){
-        if(Hash::check($password,$user->password)){
+    $user = User::where("email", $user)->get()->first();
+    if ($user) {
+        if (Hash::check($password, $user->password)) {
             $token = $user->createToken("app_token");
             return response()->json([
-                "user"=>$user,
-                "token"=>$token
+                "user" => $user,
+                "token" => $token
             ]);
         }
     }
-    return response()->json(["message"=>"failed"],401);
+    return response()->json(["message" => "failed"], 401);
 });
