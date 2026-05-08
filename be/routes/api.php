@@ -16,7 +16,24 @@ Route::group(["middleware" => ["auth:api"]], function () {
 });
 
 Route::get('/login', function () {
-    $user = request()->input("username");
+    $user = request()->input("email");
+    $password  = request()->input("password");
+
+    $user = User::where("email", $user)->get()->first();
+    if ($user) {
+        if (Hash::check($password, $user->password)) {
+            $token = $user->createToken("app_token");
+            return response()->json([
+                "user" => $user,
+                "token" => $token
+            ]);
+        }
+    }
+    return response()->json(["message" => "failed"], 401);
+});
+
+Route::post('/login', function () {
+    $user = request()->input("email");
     $password  = request()->input("password");
 
     $user = User::where("email", $user)->get()->first();
