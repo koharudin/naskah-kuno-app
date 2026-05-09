@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Kategori;
+use App\Models\Naskah;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +16,21 @@ Route::group(["middleware" => ["auth:api"]], function () {
         return response()->json(["data"=>$user]);
     });
 });
+
+Route::group(["prefix" => "public"], function () {
+    Route::get("/list-filter-kategori", function () {
+        $list = Kategori::all();
+        return response()->json(["data"=>$list]);
+    });
+    Route::get("/search-naskah", function () {
+        $list = Naskah::paginate();
+        return response()->json($list);
+    });
+    Route::get('/naskah/{slug}', function ($slug) {
+        return Naskah::where('slug', $slug)->first();
+    });
+});
+
 
 Route::get('/login', function () {
     $user = request()->input("email");

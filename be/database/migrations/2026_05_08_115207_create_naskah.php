@@ -15,6 +15,23 @@ return new class extends Migration
             $table->id();
             $table->text("title");
             $table->text("description");
+
+            $table->text('slug')->unique();
+            $table->uuid('uuid')->unique();
+            
+            $table->text('lembaga_penyimpanan')->nullable();
+            $table->string('negara')->nullable();
+            $table->varchar('kode_inventaris')->nullable();
+
+            $table->varchar('riwayat_naskah')->nullable();
+            $table->varchar('aksara')->nullable();
+            $table->varchar('bahasa')->nullable();
+            $table->varchar('alat_tulis')->nullable();
+
+            $table->text('deskripsi_fisik')->nullable();
+
+            $table->varchar('referensi_katalog')->nullable();
+            $table->varchar('akses_digital')->nullable();
             $table->timestamps();
         });
     }
